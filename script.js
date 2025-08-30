@@ -8,8 +8,14 @@ function registerUser() {
     alert("Bitte gib einen Namen ein.");
     return;
   }
+
   user = username;
   document.getElementById("gameArea").style.display = "block";
+
+  // Speichere den User mit 0 Klicks
+  set(ref(db, 'users/' + user), {
+    clicks: 0
+  });
 }
 
 function handleClick() {
