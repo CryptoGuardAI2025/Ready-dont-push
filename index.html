@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Don't Push</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="language-switch">
+    <button onclick="switchLanguage('de')">Deutsch</button>
+    <button onclick="switchLanguage('en')">English</button>
+  </div>
+
+  <h1 id="title">Drück ihn nicht!</h1>
+  <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
+
+  <p id="description">
+    Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.
+  </p>
+
+  <input type="text" id="username" placeholder="Dein einzigartiger Name" />
+  <button id="joinBtn">Teilnehmen</button>
+
+  <div id="gameArea" style="display:none;">
+    <button id="pushBtn">Don't Push</button>
+    <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
+    <p id="totalClicksDisplay">Gesamtanzahl Klicks: <span id="totalClicks">0</span></p>
+  </div>
+
+  <h2>Rangliste</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Name</th><th>Klicks</th></tr>
+    </thead>
+    <tbody id="leaderboard"></tbody>
+  </table>
+
+  <div class="footer">
+    <a href="datenschutz.html">Datenschutz</a> | <a href="nutzungsbedingungen.html">AGB</a>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
