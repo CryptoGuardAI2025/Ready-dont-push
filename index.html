@@ -1,49 +1,91 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Don't Push</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-  <script src="https://js.stripe.com/v3/"></script>
+  <title>Don't Push!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #000;
+      color: #fff;
+    }
+    #languageButtons button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #eee;
+      color: #000;
+    }
+    #pushButton {
+      display: none;
+      margin: 30px auto;
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      width: 250px;
+    }
+    .counter {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: white;
+      color: black;
+    }
+    td, th {
+      border: 1px solid black;
+      padding: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div class="lang-buttons">
+  <div id="languageButtons">
     <button onclick="switchLanguage('de')">Deutsch</button>
     <button onclick="switchLanguage('en')">English</button>
   </div>
 
   <h1 id="title">Drück ihn nicht!</h1>
-  <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
+  <h3 id="subtitle">Der weltweit meistgeklickte verbotene Knopf</h3>
   <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag...</p>
 
-  <div class="user-area">
-    <input id="username" placeholder="Dein Name" />
-    <button onclick="joinGame()" id="joinBtn">Teilnehmen</button>
-  </div>
+  <input type="text" id="username" placeholder="Dein Name" />
+  <button onclick="joinGame()" id="joinBtn">Teilnehmen</button>
 
-  <div class="button-area">
-    <button id="clickButton" onclick="handleClick()">Don't Push</button>
-    <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
-    <p id="clicksInfo">Gesamtklicks weltweit: <span id="globalCount">0</span></p>
-    <p id="clickCount">Gesamtklicks: 0</p>
-    <div id="paymentArea" style="display:none;">
-      <p>Limit erreicht. Weitere Klicks kaufen:</p>
-      <button onclick="buyClicks('paypal')">PayPal</button>
-      <button onclick="buyClicks('stripe')">Stripe</button>
-    </div>
+  <br /><br />
+  <button id="pushButton" onclick="handleClick()">Don't Push</button>
+
+  <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
+  <p class="counter" id="globalClicks">Gesamtklicks weltweit: 0</p>
+  <p class="counter" id="clickCountInfo">Gesamtklicks: 0</p>
+
+  <div id="paymentButtons" style="display:none;">
+    <p>Kaufe mehr Klicks:</p>
+    <button onclick="buyClicks(1)">1 Klick – 0,30 €</button>
+    <button onclick="buyClicks(5)">5 Klicks – 1,00 €</button>
   </div>
 
   <h2 id="leaderboardTitle">Rangliste</h2>
   <table>
     <thead>
-      <tr><th>#</th><th id="nameHeader">Name</th><th id="clicksHeader">Klicks</th></tr>
+      <tr>
+        <th>#</th>
+        <th id="nameHeader">Name</th>
+        <th id="clicksHeader">Klicks</th>
+      </tr>
     </thead>
-    <tbody id="leaderboard"></tbody>
+    <tbody id="leaderboardBody"></tbody>
   </table>
 
-  <script src="js/script.js" type="module"></script>
+  <script src="script.js"></script>
 </body>
 </html>
