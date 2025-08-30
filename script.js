@@ -1,16 +1,47 @@
-// Your web app's Firebase configuration
+let user = null;
+let freeClicks = 3;
+let totalClicks = 0;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8MF7mP13E",
-  authDomain: "dont-push-b6170.firebaseapp.com",
-  projectId: "dont-push-b6170",
-  storageBucket: "dont-push-b6170.appspot.com",
-  messagingSenderId: "813001059051",
-  appId: "1:813001059051:web:5558a33d10fe3c5a4e6f3f",
-  measurementId: "G-7F5MDTT4K6"
-};
+function registerUser() {
+  const username = document.getElementById("username").value.trim();
+  if (!username) {
+    alert("Bitte gib einen Namen ein.");
+    return;
+  }
+  user = username;
+  document.getElementById("gameArea").style.display = "block";
+}
 
+function handleClick() {
+  if (freeClicks > 0) {
+    freeClicks--;
+    totalClicks++;
+    document.getElementById("clickCount").innerText = totalClicks;
+  } else {
+    alert("Keine Freiklicks mehr. Bitte Klicks kaufen.");
+  }
+}
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+function switchLanguage(lang) {
+  if (lang === 'de') {
+    document.getElementById('title').textContent = "Drück ihn nicht!";
+    document.getElementById('subtitle').textContent = "Der weltweit meistgeklickte verbotene Knopf";
+    document.getElementById('description').textContent = "Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.";
+    document.getElementById('joinBtn').textContent = "Teilnehmen";
+    document.getElementById('priceInfo').textContent = "1 Klick = 0,30 € | 5 Klicks = 1,00 €";
+    document.getElementById('leaderboardTitle').textContent = "Rangliste";
+    document.getElementById('nameHeader').textContent = "Name";
+    document.getElementById('clicksHeader').textContent = "Klicks";
+    document.getElementById('username').placeholder = "Name eingeben";
+  } else {
+    document.getElementById('title').textContent = "Don't Push!";
+    document.getElementById('subtitle').textContent = "The world's most clicked forbidden button";
+    document.getElementById('description').textContent = "Welcome! You get 3 free clicks per day. After that, you can optionally buy more clicks: 1 click = €0.30, 5 clicks = €1.00.";
+    document.getElementById('joinBtn').textContent = "Join";
+    document.getElementById('priceInfo').textContent = "1 Click = €0.30 | 5 Clicks = €1.00";
+    document.getElementById('leaderboardTitle').textContent = "Leaderboard";
+    document.getElementById('nameHeader').textContent = "Name";
+    document.getElementById('clicksHeader').textContent = "Clicks";
+    document.getElementById('username').placeholder = "Enter name";
+  }
+}
