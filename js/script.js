@@ -1,100 +1,121 @@
-
-// Firebase Setup (replace with your real config)
+// Firebase Setup
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8MDW8TtA4",
   authDomain: "dont-push-b6170.firebaseapp.com",
+  databaseURL: "https://dont-push-b6170-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "dont-push-b6170",
   storageBucket: "dont-push-b6170.appspot.com",
   messagingSenderId: "813001059051",
   appId: "1:813001059051:web:5558a33d10fe3c3a263e86",
-  measurementId: "G-7F5MDTT4K6",
-  databaseURL: "https://dont-push-b6170-default-rtdb.firebaseio.com"
+  measurementId: "G-7F5MDTT4K6"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let currentUser = null;
-let freeClicks = 3;
-let totalClicks = 0;
+let currentIP = "";
+let today = new Date().toISOString().split('T')[0];
 
-function registerUser() {
-    const name = document.getElementById('username').value;
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("clickButton").disabled = true;
+    fetch("https://api.ipify.org?format=json")
+        .then(res => res.json())
+        .then(data => currentIP = data.ip);
+});
+
+window.registerUser = async function() {
+    const name = document.getElementById("username").value.trim();
     if (!name) return alert("Bitte Namen eingeben");
-    currentUser = name;
-    document.getElementById('clickButton').disabled = false;
-
-    const userRef = ref(db, 'users/' + name);
-    get(userRef).then(snapshot => {
-        if (!snapshot.exists()) {
-            set(userRef, { clicks: 0, freeClicks: 3 });
+    const userRef = ref(db, "users/" + name);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        if (data.ip !== currentIP) {
+            return alert("Dieser Name ist bereits von einer anderen IP vergeben.");
         }
-    });
-
+    } else {
+        await set(userRef, { name, clicks: 0, freeClicks: 3, ip: currentIP, lastActive: today });
+    }
+    currentUser = name;
+    document.getElementById("clickButton").disabled = false;
     loadLeaderboard();
     loadGlobalClicks();
-}
+};
 
-function handleClick() {
+window.handleClick = async function() {
     if (!currentUser) return;
-    const userRef = ref(db, 'users/' + currentUser);
-    get(userRef).then(snapshot => {
-        let data = snapshot.val();
-        if (data.freeClicks > 0) {
-            data.clicks++;
-            data.freeClicks--;
-            update(userRef, data);
-            incrementGlobalClicks();
-            loadLeaderboard();
-        } else {
-            alert("Du hast keine Freiklicks mehr. Bitte kaufen.");
+    const userRef = ref(db, "users/" + currentUser);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const user = snapshot.val();
+        if (user.lastActive !== today) {
+            user.freeClicks = 3;
+            user.lastActive = today;
         }
-    });
-}
+        if (user.freeClicks <= 0) {
+            alert("Keine Freiklicks mehr! Bitte Klicks kaufen.");
+            return;
+        }
+        user.clicks += 1;
+        user.freeClicks -= 1;
+        await update(userRef, user);
+        await incrementGlobalClicks();
+        loadLeaderboard();
+    }
+};
 
-function buyClicks() {
-    if (!currentUser) return alert("Bitte zuerst Namen eingeben");
-    const userRef = ref(db, 'users/' + currentUser);
-    get(userRef).then(snapshot => {
-        let data = snapshot.val();
-        data.freeClicks += 5;
-        update(userRef, data);
-        alert("5 Klicks gutgeschrieben (Demo-Modus)");
-    });
-}
+window.buyClicks = async function() {
+    if (!currentUser) return alert("Bitte zuerst Namen registrieren.");
+    const userRef = ref(db, "users/" + currentUser);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const user = snapshot.val();
+        user.freeClicks += 5;
+        await update(userRef, user);
+        alert("5 Klicks gekauft (Demo-Modus)");
+    }
+};
 
 function loadLeaderboard() {
-    const usersRef = ref(db, 'users');
+    const usersRef = ref(db, "users");
     onValue(usersRef, snapshot => {
         const data = snapshot.val();
-        const sorted = Object.entries(data || {}).sort(([, a], [, b]) => b.clicks - a.clicks);
-        const table = document.getElementById('leaderboard');
-        table.innerHTML = '';
-        sorted.slice(0, 10).forEach(([name, user], i) => {
-            const row = `<tr><td>${i+1}</td><td>${name}</td><td>${user.clicks}</td></tr>`;
-            table.innerHTML += row;
+        const leaderboard = Object.entries(data || {}).sort((a, b) => b[1].clicks - a[1].clicks).slice(0, 10);
+        const tbody = document.getElementById("leaderboard");
+        tbody.innerHTML = "";
+        leaderboard.forEach(([name, user], index) => {
+            tbody.innerHTML += `<tr><td>${index + 1}</td><td>${name}</td><td>${user.clicks}</td></tr>`;
         });
     });
 }
 
-function incrementGlobalClicks() {
-    const clicksRef = ref(db, 'globalClicks');
-    get(clicksRef).then(snapshot => {
-        const value = snapshot.val() || 0;
-        set(clicksRef, value + 1);
-    });
-}
-
 function loadGlobalClicks() {
-    const clicksRef = ref(db, 'globalClicks');
-    onValue(clicksRef, snapshot => {
-        document.getElementById('globalClicks').innerText = snapshot.val() || 0;
+    const refClicks = ref(db, "globalClicks");
+    onValue(refClicks, snapshot => {
+        document.getElementById("globalClicks").innerText = snapshot.val() || 0;
     });
 }
 
-window.registerUser = registerUser;
-window.handleClick = handleClick;
-window.buyClicks = buyClicks;
+async function incrementGlobalClicks() {
+    const clicksRef = ref(db, "globalClicks");
+    const snapshot = await get(clicksRef);
+    const total = snapshot.val() || 0;
+    await set(clicksRef, total + 1);
+}
+
+window.switchLanguage = function(lang) {
+    document.getElementById("title").innerText = lang === "en" ? "Don't Push It!" : "Drück ihn nicht!";
+    document.getElementById("subtitle").innerText = lang === "en"
+        ? "The world's most clicked forbidden button" : "Der weltweit meistgeklickte verbotene Knopf";
+    document.getElementById("welcome").innerText = lang === "en"
+        ? "Welcome! You get 3 free clicks per day…" : "Willkommen! Du hast 3 Freiklicks pro Tag…";
+    document.getElementById("price-info").innerText = lang === "en"
+        ? "5 Clicks = €1.00" : "5 Klicks = 1,00 €";
+    document.querySelector("button[onclick='registerUser()']").innerText = lang === "en" ? "Join" : "Teilnehmen";
+    document.getElementById("clickButton").innerText = lang === "en" ? "Don't Push" : "Nicht drücken";
+    document.querySelector("button[onclick='buyClicks()']").innerText = lang === "en" ? "Buy Clicks" : "Klicks kaufen";
+};
