@@ -2,7 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase
 import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 const firebaseConfig = {
-  // ADD YOUR FIREBASE CONFIG HERE
+  apiKey: "AIzaSyC...Nd8M",
+  authDomain: "dont-push-b6170.firebaseapp.com",
+  projectId: "dont-push-b6170",
+  storageBucket: "dont-push-b6170.appspot.com",
+  messagingSenderId: "813001059051",
+  appId: "1:813001059051:web:5558a33d10fe3c41",
+  measurementId: "G-7F5MDTT4K6"
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
