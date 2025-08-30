@@ -1,117 +1,121 @@
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import {
-  getDatabase, ref, set, get, update, onValue
-} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getDatabase, ref, onValue, set, get, update } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
-// Deine Firebase-Konfiguration
 const firebaseConfig = {
-  apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8M2F-ibeY",
-  authDomain: "dont-push-b6170.firebaseapp.com",
-  databaseURL: "https://dont-push-b6170-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "dont-push-b6170",
-  storageBucket: "dont-push-b6170.appspot.com",
-  messagingSenderId: "813001059051",
-  appId: "1:813001059051:web:5558a33d10fe3c0e6b154a",
-  measurementId: "G-7F5MDTT4K6"
+    apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8MtZfYqT8",
+    authDomain: "dont-push-b6170.firebaseapp.com",
+    projectId: "dont-push-b6170",
+    storageBucket: "dont-push-b6170.appspot.com",
+    messagingSenderId: "813001059051",
+    appId: "1:813001059051:web:5558a33d10fe3c4c239e88",
+    measurementId: "G-7F5MDTT4K6"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let currentUser = "";
-let clickCount = 0;
-let freeClicks = 3;
+let clickLimit = 3;
+let clicksLeft = 3;
 
-function joinGame() {
-  const input = document.getElementById('username');
-  const name = input.value.trim();
-  if (!name) return alert("Bitte Namen eingeben.");
-  currentUser = name;
-
-  const userRef = ref(db, 'users/' + name);
-  get(userRef).then(snapshot => {
-    if (!snapshot.exists()) {
-      set(userRef, { clicks: 0 });
-    } else {
-      clickCount = snapshot.val().clicks || 0;
-    }
-  });
-
-  document.getElementById('epicButton').style.display = "inline-block";
+function updateTotalClicksDisplay(total) {
+    document.getElementById("total-clicks").innerText = total;
 }
 
-function handleClick() {
-  if (freeClicks <= 0) {
-    alert("Keine Freiklicks mehr! Bitte Klicks kaufen.");
-    return;
-  }
-
-  freeClicks--;
-  clickCount++;
-
-  const userRef = ref(db, 'users/' + currentUser);
-  set(userRef, {
-    name: currentUser,
-    clicks: clickCount
-  });
-
-  const totalRef = ref(db, 'totalClicks');
-  get(totalRef).then(snapshot => {
-    const total = snapshot.val() || 0;
-    set(totalRef, total + 1);
-  });
-}
-
-function updateLeaderboard() {
-  const usersRef = ref(db, 'users');
-  onValue(usersRef, (snapshot) => {
-    const data = snapshot.val();
-    const sorted = Object.entries(data || {}).sort((a, b) => b[1].clicks - a[1].clicks).slice(0, 10);
-    const leaderboard = document.getElementById("leaderboard");
-    leaderboard.innerHTML = "";
-    sorted.forEach(([name, val], idx) => {
-      leaderboard.innerHTML += `<tr><td>${idx + 1}</td><td>${name}</td><td>${val.clicks}</td></tr>`;
+function loadLeaderboard() {
+    const leaderboardRef = ref(db, 'users');
+    onValue(leaderboardRef, (snapshot) => {
+        const data = snapshot.val();
+        const sorted = Object.entries(data || {}).sort((a, b) => b[1].clicks - a[1].clicks);
+        const table = document.querySelector("#leaderboard tbody");
+        table.innerHTML = "";
+        sorted.slice(0, 10).forEach(([name, info], index) => {
+            const row = `<tr><td>${index + 1}</td><td>${name}</td><td>${info.clicks}</td></tr>`;
+            table.innerHTML += row;
+        });
     });
-  });
 }
 
-function updateTotalClicks() {
-  const totalRef = ref(db, 'totalClicks');
-  onValue(totalRef, (snapshot) => {
-    document.getElementById("totalClicks").innerText = snapshot.val() || 0;
-  });
+function loadTotalClicks() {
+    const totalRef = ref(db, 'meta/totalClicks');
+    onValue(totalRef, (snapshot) => {
+        const total = snapshot.val() || 0;
+        updateTotalClicksDisplay(total);
+    });
 }
 
-function buyClicks() {
-  alert("Zahlungssystem in Vorbereitung – PayPal Integration folgt.");
-  freeClicks += 5;
-}
+window.registerUser = function() {
+    const name = document.getElementById("username").value.trim();
+    if (!name) return alert("Bitte gib einen Namen ein.");
+    currentUser = name;
 
-function switchLanguage(lang) {
-  const texts = {
-    de: {
-      title: "Drück ihn nicht!",
-      subtitle: "Der weltweit meistgeklickte verbotene Knopf",
-      description: "Willkommen! Du hast 3 Freiklicks pro Tag...",
-      joinBtn: "Teilnehmen",
-      buyBtn: "Klicks kaufen"
-    },
-    en: {
-      title: "Don't Press It!",
-      subtitle: "The world's most clicked forbidden button",
-      description: "Welcome! You get 3 free clicks per day...",
-      joinBtn: "Join",
-      buyBtn: "Buy Clicks"
+    const userRef = ref(db, 'users/' + name);
+    get(userRef).then(snapshot => {
+        if (!snapshot.exists()) {
+            set(userRef, { clicks: 0 });
+        }
+        clicksLeft = 3;
+        document.getElementById("button-container").style.display = "block";
+    });
+};
+
+window.handleClick = function() {
+    if (!currentUser) return alert("Bitte registriere dich zuerst.");
+
+    if (clicksLeft <= 0) {
+        alert("Keine Freiklicks mehr! Bitte kaufen.");
+        return;
     }
-  };
-  const t = texts[lang];
-  document.getElementById("title").innerText = t.title;
-  document.getElementById("subtitle").innerText = t.subtitle;
-  document.getElementById("description").innerText = t.description;
-  document.getElementById("joinBtn").innerText = t.joinBtn;
-  document.getElementById("buyClicks").innerText = t.buyBtn;
-}
 
-updateLeaderboard();
-updateTotalClicks();
+    const userRef = ref(db, 'users/' + currentUser);
+    get(userRef).then(snapshot => {
+        const data = snapshot.val();
+        const newClicks = (data?.clicks || 0) + 1;
+        set(userRef, { clicks: newClicks });
+
+        const totalRef = ref(db, 'meta/totalClicks');
+        get(totalRef).then(snap => {
+            const total = (snap.val() || 0) + 1;
+            set(totalRef, total);
+        });
+
+        clicksLeft--;
+    });
+};
+
+window.buyClicks = function() {
+    alert("Zahlungssystem folgt – du hast 5 Klicks gratis dazu bekommen.");
+    clicksLeft += 5;
+};
+
+window.setLanguage = function(lang) {
+    const texts = {
+        de: {
+            title: "Drück ihn nicht!",
+            subtitle: "Der weltweit meistgeklickte verbotene Knopf",
+            desc: "Willkommen! Du hast 3 Freiklicks pro Tag...",
+            pricing: "5 Klicks = 1,00 €",
+            buy: "Klicks kaufen",
+            join: "Teilnehmen"
+        },
+        en: {
+            title: "Don't Push It!",
+            subtitle: "The world's most clicked forbidden button",
+            desc: "Welcome! You have 3 free clicks per day...",
+            pricing: "5 Clicks = €1.00",
+            buy: "Buy Clicks",
+            join: "Join"
+        }
+    };
+    const t = texts[lang];
+    document.getElementById("main-title").innerText = t.title;
+    document.getElementById("subtitle").innerText = t.subtitle;
+    document.getElementById("description").innerText = t.desc;
+    document.getElementById("pricing").innerText = t.pricing;
+    document.querySelector("button[onclick='buyClicks()']").innerText = t.buy;
+    document.querySelector("button[onclick='registerUser()']").innerText = t.join;
+};
+
+loadLeaderboard();
+loadTotalClicks();
