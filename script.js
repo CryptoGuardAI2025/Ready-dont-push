@@ -92,5 +92,5 @@ function updateLeaderboard() {
 }
 
 window.onload = () => {
-  loadLeaderboard();
+  updateLeaderboard();
 };
