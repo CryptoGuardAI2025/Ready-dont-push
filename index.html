@@ -3,42 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="title">Drück ihn nicht!</title>
+  <title>Drück ihn nicht!</title>
   <style>
     body {
       background-color: black;
       color: white;
       font-family: Arial, sans-serif;
       text-align: center;
-      margin: 0;
-      padding: 2rem;
     }
-    input, button {
-      padding: 10px;
-      margin: 10px;
-    }
-    #pushBtn {
+    .button {
+      padding: 20px;
       background-color: red;
-      color: black;
-      font-size: 24px;
-      padding: 20px 40px;
+      color: white;
+      font-size: 20px;
+      margin: 20px;
       border: none;
       cursor: pointer;
     }
-    #gameArea {
-      display: none;
-    }
-    .footer {
-      margin-top: 40px;
-    }
     table {
-      margin: auto;
+      margin: 0 auto;
       border-collapse: collapse;
       width: 80%;
     }
     th, td {
+      padding: 8px 12px;
       border: 1px solid white;
+    }
+    input, button {
       padding: 8px;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -50,54 +43,55 @@
   <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
   <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.</p>
 
-  <input type="text" id="username" placeholder="Name eingeben" />
-  <button id="joinBtn" onclick="registerUser()">Teilnehmen</button>
+  <input id="username" placeholder="Dein Name" />
+  <button onclick="joinGame()" id="joinBtn">Teilnehmen</button>
 
-  <div id="gameArea" style="display:none;">
-    <button id="pushBtn" onclick="handleClick()">Dont Push</button>
-    <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
-    <p id="totalClicksDisplay">Gesamtanzahl Klicks: <span id="clickCount">0</span></p>
+  <div>
+    <button class="button" onclick="handleClick()" id="pushBtn">Don't Push</button>
   </div>
+
+  <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
+  <p id="clicksInfo">Gesamtanzahl Klicks: <span id="clickCount">0</span></p>
 
   <h2 id="leaderboardTitle">Rangliste</h2>
   <table>
     <thead>
-      <tr><th>#</th><th id="nameHeader">Name</th><th id="clicksHeader">Klicks</th></tr>
+      <tr>
+        <th>#</th>
+        <th id="nameHeader">Name</th>
+        <th id="clicksHeader">Klicks</th>
+      </tr>
     </thead>
-    <tbody id="leaderboard"></tbody>
+    <tbody id="leaderboardBody"></tbody>
   </table>
 
-  <div class="footer">
-    <a href="datenschutz.html">Datenschutz</a> |
-    <a href="agb.html">AGB</a>
-  </div>
+  <p><a href="datenschutz.html">Datenschutz</a> | <a href="agb.html">AGB</a></p>
 
-  <!-- Script für deine Logik -->
-<script src="script.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-<!-- Firebase Setup (modular via Browser Modules) -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8M2F-ibeY",
+      authDomain: "dont-push-b6170.firebaseapp.com",
+      databaseURL: "https://dont-push-b6170-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "dont-push-b6170",
+      storageBucket: "dont-push-b6170.appspot.com",
+      messagingSenderId: "813001059051",
+      appId: "1:813001059051:web:b16a8b1d5cb6a89359acae",
+      measurementId: "G-8EPCZRVPH1"
+    };
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8M2F-ibeY",
-    authDomain: "dont-push-b6170.firebaseapp.com",
-    databaseURL: "https://dont-push-b6170-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "dont-push-b6170",
-    storageBucket: "dont-push-b6170.firebasestorage.app",
-    messagingSenderId: "813001059051",
-    appId: "1:813001059051:web:b16a8b1d5cb6a89359acae",
-    measurementId: "G-8EPCZRVPH1"
-  };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+    window.db = db;
+    window.ref = ref;
+    window.set = set;
+    window.onValue = onValue;
+    window.get = get;
 
-  window.db = db;
-  window.ref = ref;
-  window.set = set;
-  window.onValue = onValue;
-</script>
+    import "./script.js";
+  </script>
 </body>
 </html>

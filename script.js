@@ -1,28 +1,30 @@
-let user = null;
-let freeClicks = 3;
+let currentUser = "";
 let totalClicks = 0;
 
-function registerUser() {
+function joinGame() {
   const username = document.getElementById("username").value.trim();
-  if (!username) {
-    alert("Bitte gib einen Namen ein.");
-    return;
-  }
-
-  user = username;
-  document.getElementById("gameArea").style.display = "block";
-
-  // Speichere den User mit 0 Klicks
-  set(ref(db, 'users/' + user), {
-    clicks: 0
+  if (!username) return;
+  currentUser = username;
+  get(ref(db, 'users/' + username)).then(snapshot => {
+    if (snapshot.exists()) {
+      totalClicks = snapshot.val().clicks;
+    } else {
+      totalClicks = 0;
+      saveUserClick(username, 0);
+    }
+    document.getElementById("clickCount").textContent = totalClicks;
   });
 }
 
-import { getDatabase, ref, set, onValue } from "firebase/database";
+function handleClick() {
+  if (!currentUser) return alert("Bitte zuerst Namen eingeben!");
+  totalClicks++;
+  document.getElementById("clickCount").textContent = totalClicks;
+  saveUserClick(currentUser, totalClicks);
+  updateLeaderboard();
+}
 
-function saveUserClick(user, totalClicks); // ⬅️ Wichtig!
-  function saveUserClick(username, clickCount) {
-  const db = getDatabase();
+function saveUserClick(username, clickCount) {
   const userRef = ref(db, 'users/' + username);
   set(userRef, {
     name: username,
@@ -30,65 +32,61 @@ function saveUserClick(user, totalClicks); // ⬅️ Wichtig!
   });
 }
 
-function handleClick() {
-  if (freeClicks > 0) {
-    freeClicks--;
-    totalClicks++;
-    document.getElementById("clickCount").innerText = totalClicks;
-
-    // HIER: Klick in Datenbank speichern
-    saveUserClick(user, totalClicks);
-
-  } else {
-    alert("Keine Freiklicks mehr. Bitte Klicks kaufen.");
-  }
-}
-function switchLanguage(lang) {
-  if (lang === 'de') {
-    document.getElementById('title').textContent = "Drück ihn nicht!";
-    document.getElementById('subtitle').textContent = "Der weltweit meistgeklickte verbotene Knopf";
-    document.getElementById('description').textContent = "Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.";
-    document.getElementById('joinBtn').textContent = "Teilnehmen";
-    document.getElementById('priceInfo').textContent = "1 Klick = 0,30 € | 5 Klicks = 1,00 €";
-    document.getElementById('leaderboardTitle').textContent = "Rangliste";
-    document.getElementById('nameHeader').textContent = "Name";
-    document.getElementById('clicksHeader').textContent = "Klicks";
-    document.getElementById('username').placeholder = "Name eingeben";
-  } else {
-    document.getElementById('title').textContent = "Don't Push!";
-    document.getElementById('subtitle').textContent = "The world's most clicked forbidden button";
-    document.getElementById('description').textContent = "Welcome! You get 3 free clicks per day. After that, you can optionally buy more clicks: 1 click = €0.30, 5 clicks = €1.00.";
-    document.getElementById('joinBtn').textContent = "Join";
-    document.getElementById('priceInfo').textContent = "1 Click = €0.30 | 5 Clicks = €1.00";
-    document.getElementById('leaderboardTitle').textContent = "Leaderboard";
-    document.getElementById('nameHeader').textContent = "Name";
-    document.getElementById('clicksHeader').textContent = "Clicks";
-    document.getElementById('username').placeholder = "Enter name";
-  }
-}
 function updateLeaderboard() {
-  const db = getDatabase();
   const usersRef = ref(db, 'users');
-
   onValue(usersRef, (snapshot) => {
     const data = snapshot.val();
+    if (!data) return;
     const sorted = Object.values(data).sort((a, b) => b.clicks - a.clicks);
-
-    const leaderboardBody = document.getElementById("leaderboardBody");
-    leaderboardBody.innerHTML = "";
-
+    const leaderboard = document.getElementById("leaderboardBody");
+    leaderboard.innerHTML = "";
     sorted.forEach((user, index) => {
       const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${user.name}</td>
-        <td>${user.clicks}</td>
-      `;
-      leaderboardBody.appendChild(row);
+      row.innerHTML = `<td>${index + 1}</td><td>${user.name}</td><td>${user.clicks}</td>`;
+      leaderboard.appendChild(row);
     });
   });
 }
 
-window.onload = () => {
-  updateLeaderboard();
-};
+function switchLanguage(lang) {
+  const texts = {
+    de: {
+      title: "Drück ihn nicht!",
+      subtitle: "Der weltweit meistgeklickte verbotene Knopf",
+      description: "Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.",
+      joinBtn: "Teilnehmen",
+      priceInfo: "1 Klick = 0,30 € | 5 Klicks = 1,00 €",
+      clicksInfo: "Gesamtanzahl Klicks:",
+      leaderboardTitle: "Rangliste",
+      nameHeader: "Name",
+      clicksHeader: "Klicks",
+      username: "Dein Name"
+    },
+    en: {
+      title: "Don't push it!",
+      subtitle: "The world's most clicked forbidden button",
+      description: "Welcome! You have 3 free clicks per day. After that, you can voluntarily buy more clicks: 1 click = €0.30, 5 clicks = €1.00.",
+      joinBtn: "Join",
+      priceInfo: "1 click = €0.30 | 5 clicks = €1.00",
+      clicksInfo: "Total clicks:",
+      leaderboardTitle: "Leaderboard",
+      nameHeader: "Name",
+      clicksHeader: "Clicks",
+      username: "Your name"
+    }
+  };
+  const t = texts[lang];
+  if (!t) return;
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("subtitle").textContent = t.subtitle;
+  document.getElementById("description").textContent = t.description;
+  document.getElementById("joinBtn").textContent = t.joinBtn;
+  document.getElementById("priceInfo").textContent = t.priceInfo;
+  document.getElementById("clicksInfo").innerHTML = t.clicksInfo + " <span id='clickCount'>" + totalClicks + "</span>";
+  document.getElementById("leaderboardTitle").textContent = t.leaderboardTitle;
+  document.getElementById("nameHeader").textContent = t.nameHeader;
+  document.getElementById("clicksHeader").textContent = t.clicksHeader;
+  document.getElementById("username").placeholder = t.username;
+}
+
+window.onload = () => updateLeaderboard();
