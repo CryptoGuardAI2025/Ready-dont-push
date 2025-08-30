@@ -1,6 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, onValue, update } from "firebase/database";
 
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 const firebaseConfig = {
   apiKey: "AIzaSyC...Nd8M",
   authDomain: "dont-push-b6170.firebaseapp.com",
