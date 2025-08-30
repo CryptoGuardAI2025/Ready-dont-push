@@ -68,26 +68,28 @@ function switchLanguage(lang) {
     document.getElementById('username').placeholder = "Enter name";
   }
 }
-function loadLeaderboard() {
-  const leaderboard = document.getElementById("leaderboard");
-  leaderboard.innerHTML = "";
+function updateLeaderboard() {
+  const db = getDatabase();
+  const usersRef = ref(db, 'users');
 
- onValue(ref(db, "users"), (snapshot) => {
-  const data = snapshot.val();
-  const sorted = Object.values(data).sort((a, b) => b.clicks - a.clicks);
+  onValue(usersRef, (snapshot) => {
+    const data = snapshot.val();
+    const sorted = Object.values(data).sort((a, b) => b.clicks - a.clicks);
 
-  const leaderboard = document.getElementById("leaderboard");
-  leaderboard.innerHTML = ""; // vorher leeren!
+    const leaderboardBody = document.getElementById("leaderboardBody");
+    leaderboardBody.innerHTML = "";
 
-  sorted.forEach((entry, index) => {
-    const row = `<tr>
-                   <td>${index + 1}</td>
-                   <td>${entry.name}</td>
-                   <td>${entry.clicks}</td>
-                 </tr>`;
-    leaderboard.innerHTML += row;
+    sorted.forEach((user, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${user.name}</td>
+        <td>${user.clicks}</td>
+      `;
+      leaderboardBody.appendChild(row);
+    });
   });
-});
+}
 
 window.onload = () => {
   loadLeaderboard();
