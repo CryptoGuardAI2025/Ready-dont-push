@@ -2,58 +2,24 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Drück ihn nicht!</title>
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    .button {
-      padding: 20px;
-      background-color: red;
-      color: white;
-      font-size: 20px;
-      margin: 20px;
-      border: none;
-      cursor: pointer;
-    }
-    table {
-      margin: 0 auto;
-      border-collapse: collapse;
-      width: 80%;
-    }
-    th, td {
-      padding: 8px 12px;
-      border: 1px solid white;
-    }
-    input, button {
-      padding: 8px;
-      font-size: 16px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Don't Push</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <button onclick="switchLanguage('de')">Deutsch</button>
-  <button onclick="switchLanguage('en')">English</button>
-
-  <h1 id="title">Drück ihn nicht!</h1>
-  <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
-  <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.</p>
-
-  <input id="username" placeholder="Dein Name" />
-  <button onclick="joinGame()" id="joinBtn">Teilnehmen</button>
-
-  <div>
-    <button class="button" onclick="handleClick()" id="pushBtn">Don't Push</button>
+  <div class="language-switch">
+    <button onclick="switchLanguage('de')">Deutsch</button>
+    <button onclick="switchLanguage('en')">English</button>
   </div>
-
+  <h1 id="title">Drück ihn nicht!</h1>
+  <h2 id="subtitle">Der weltweit meistgeklickte verbotene Knopf</h2>
+  <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.</p>
+  <input type="text" id="username" placeholder="Dein Name">
+  <button id="joinBtn" onclick="joinGame()">Teilnehmen</button>
+  <button id="clickBtn" onclick="handleClick()">Dont Push</button>
   <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
   <p id="clicksInfo">Gesamtanzahl Klicks: <span id="clickCount">0</span></p>
-
-  <h2 id="leaderboardTitle">Rangliste</h2>
+  <h3 id="leaderboardTitle">Rangliste</h3>
   <table>
     <thead>
       <tr>
@@ -62,36 +28,9 @@
         <th id="clicksHeader">Klicks</th>
       </tr>
     </thead>
-    <tbody id="leaderboardBody"></tbody>
+    <tbody id="leaderboard"></tbody>
   </table>
-
-  <p><a href="datenschutz.html">Datenschutz</a> | <a href="agb.html">AGB</a></p>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8M2F-ibeY",
-      authDomain: "dont-push-b6170.firebaseapp.com",
-      databaseURL: "https://dont-push-b6170-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "dont-push-b6170",
-      storageBucket: "dont-push-b6170.appspot.com",
-      messagingSenderId: "813001059051",
-      appId: "1:813001059051:web:b16a8b1d5cb6a89359acae",
-      measurementId: "G-8EPCZRVPH1"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.db = db;
-    window.ref = ref;
-    window.set = set;
-    window.onValue = onValue;
-    window.get = get;
-
-    import "./script.js";
-  </script>
+  <script type="module" src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

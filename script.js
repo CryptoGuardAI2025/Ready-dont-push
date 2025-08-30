@@ -2,7 +2,7 @@ let currentUser = "";
 let totalClicks = 0;
 
 function joinGame() {
-  const username = document.getElementById("username").value.trim();
+  const username = document.getElementById("username").value;
   if (!username) return;
   currentUser = username;
   get(ref(db, 'users/' + username)).then(snapshot => {
@@ -10,7 +10,7 @@ function joinGame() {
       totalClicks = snapshot.val().clicks;
     } else {
       totalClicks = 0;
-      saveUserClick(username, 0);
+      saveUserClick(username, totalClicks);
     }
     document.getElementById("clickCount").textContent = totalClicks;
   });
@@ -34,11 +34,11 @@ function saveUserClick(username, clickCount) {
 
 function updateLeaderboard() {
   const usersRef = ref(db, 'users');
-  onValue(usersRef, (snapshot) => {
+  onValue(usersRef, snapshot => {
     const data = snapshot.val();
     if (!data) return;
     const sorted = Object.values(data).sort((a, b) => b.clicks - a.clicks);
-    const leaderboard = document.getElementById("leaderboardBody");
+    const leaderboard = document.getElementById("leaderboard");
     leaderboard.innerHTML = "";
     sorted.forEach((user, index) => {
       const row = document.createElement("tr");
@@ -65,7 +65,7 @@ function switchLanguage(lang) {
     en: {
       title: "Don't push it!",
       subtitle: "The world's most clicked forbidden button",
-      description: "Welcome! You have 3 free clicks per day. After that, you can voluntarily buy more clicks: 1 click = €0.30, 5 clicks = €1.00.",
+      description: "Welcome! You have 3 free clicks per day. Afterwards, you can buy more: 1 click = €0.30, 5 clicks = €1.00.",
       joinBtn: "Join",
       priceInfo: "1 click = €0.30 | 5 clicks = €1.00",
       clicksInfo: "Total clicks:",
@@ -82,7 +82,7 @@ function switchLanguage(lang) {
   document.getElementById("description").textContent = t.description;
   document.getElementById("joinBtn").textContent = t.joinBtn;
   document.getElementById("priceInfo").textContent = t.priceInfo;
-  document.getElementById("clicksInfo").innerHTML = t.clicksInfo + " <span id='clickCount'>" + totalClicks + "</span>";
+  document.getElementById("clicksInfo").innerHTML = t.clicksInfo + ' <span id="clickCount">' + totalClicks + '</span>';
   document.getElementById("leaderboardTitle").textContent = t.leaderboardTitle;
   document.getElementById("nameHeader").textContent = t.nameHeader;
   document.getElementById("clicksHeader").textContent = t.clicksHeader;
