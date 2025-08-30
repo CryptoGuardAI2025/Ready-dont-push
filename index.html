@@ -2,70 +2,48 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Don't Push</title>
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    #main {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-    }
-    #pushBtn {
-      background-color: red;
-      color: white;
-      font-weight: bold;
-      border: none;
-    }
-    table {
-      margin: auto;
-      margin-top: 20px;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    th, td {
-      border: 1px solid white;
-      padding: 8px;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-  <div id="main">
+  <div class="lang-buttons">
     <button onclick="switchLanguage('de')">Deutsch</button>
     <button onclick="switchLanguage('en')">English</button>
-    <h1 id="title">Drück ihn nicht!</h1>
-    <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
-    <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag...</p>
-    <input type="text" id="username" placeholder="Dein Name" />
-    <button id="joinBtn" onclick="joinGame()">Teilnehmen</button>
-    <br/>
-    <button id="pushBtn" onclick="handleClick()">Don't Push</button>
-    <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
-    <p id="clicksInfo">Gesamtanzahl Klicks: <span id="clickCount">0</span></p>
-    <h2 id="leaderboardTitle">Rangliste</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th id="nameHeader">Name</th>
-          <th id="clicksHeader">Klicks</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard"></tbody>
-    </table>
   </div>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-  <script src="script.js" type="module"></script>
+
+  <h1 id="title">Drück ihn nicht!</h1>
+  <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
+  <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag...</p>
+
+  <div class="user-area">
+    <input id="username" placeholder="Dein Name" />
+    <button onclick="joinGame()" id="joinBtn">Teilnehmen</button>
+  </div>
+
+  <div class="button-area">
+    <button id="clickButton" onclick="handleClick()">Don't Push</button>
+    <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
+    <p id="clicksInfo">Gesamtklicks weltweit: <span id="globalCount">0</span></p>
+    <p id="clickCount">Gesamtklicks: 0</p>
+    <div id="paymentArea" style="display:none;">
+      <p>Limit erreicht. Weitere Klicks kaufen:</p>
+      <button onclick="buyClicks('paypal')">PayPal</button>
+      <button onclick="buyClicks('stripe')">Stripe</button>
+    </div>
+  </div>
+
+  <h2 id="leaderboardTitle">Rangliste</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th id="nameHeader">Name</th><th id="clicksHeader">Klicks</th></tr>
+    </thead>
+    <tbody id="leaderboard"></tbody>
+  </table>
+
+  <script src="js/script.js" type="module"></script>
 </body>
 </html>
