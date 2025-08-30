@@ -21,8 +21,9 @@ function registerUser() {
 import { getDatabase, ref, set, onValue } from "firebase/database";
 
 function saveUserClick(user, totalClicks); // ⬅️ Wichtig!
+  function saveUserClick(username, clickCount) {
   const db = getDatabase();
-  const userRef = ref(db, 'users/' + username); // ← identifiziert Nutzer eindeutig
+  const userRef = ref(db, 'users/' + username);
   set(userRef, {
     name: username,
     clicks: clickCount
@@ -35,14 +36,11 @@ function handleClick() {
     totalClicks++;
     document.getElementById("clickCount").innerText = totalClicks;
 
-    // ✅ Klicks für den aktuellen Benutzer speichern
-    set(ref(db, "users/" + user), {
-      name: user,
-      clicks: totalClicks
-    });
+    // HIER: Klick in Datenbank speichern
+    saveUserClick(user, totalClicks);
 
   } else {
-    alert("Keine Freiklicks mehr. Bitte Klicks kaufen!");
+    alert("Keine Freiklicks mehr. Bitte Klicks kaufen.");
   }
 }
 function switchLanguage(lang) {
