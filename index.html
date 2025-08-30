@@ -3,56 +3,36 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drück ihn nicht!</title>
-    <link rel="stylesheet" href="style.css">
     <script type="module" src="script.js" defer></script>
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOlnd8Md-pqz9g",
-            authDomain: "dont-push-b6170.firebaseapp.com",
-            projectId: "dont-push-b6170",
-            storageBucket: "dont-push-b6170.appspot.com",
-            messagingSenderId: "813001059051",
-            appId: "1:813001059051:web:5558a33d10fe3cf5b9367f",
-            measurementId: "G-7F5MDTT4K6"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        window.db = db;
-        window.firebaseRefs = { ref, set, get, update, onValue };
-    </script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="language-buttons">
+    <div class="language-switch">
         <button onclick="switchLanguage('de')">Deutsch</button>
         <button onclick="switchLanguage('en')">English</button>
     </div>
     <h1 id="title">Drück ihn nicht!</h1>
     <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
-    <p id="welcome-text">Willkommen! Du hast 3 Freiklicks pro Tag…</p>
+    <p id="welcome">Willkommen! Du hast 3 Freiklicks pro Tag…</p>
 
     <input type="text" id="username" placeholder="Dein Name">
-    <button id="joinBtn">Teilnehmen</button>
+    <button onclick="registerUser()">Teilnehmen</button>
 
-    <div id="button-container" style="display:none;">
-        <button id="clickBtn" class="epic-button">Don't Push</button>
-        <p id="clickInfo">5 Klicks = 1,00 €</p>
-        <button id="buyClicksBtn">Klicks kaufen</button>
-        <p id="totalClicksDisplay">Gesamtklicks weltweit: <span id="totalClicks">0</span></p>
-    </div>
+    <button id="clickButton" onclick="handleClick()" disabled>Don't Push</button>
+
+    <p id="price-info">5 Klicks = 1,00 €</p>
+    <button onclick="buyClicks()">Klicks kaufen</button>
+
+    <p>Gesamtklicks weltweit: <span id="globalClicks">0</span></p>
 
     <h2>Rangliste</h2>
-    <table id="leaderboard">
+    <table>
         <thead>
             <tr><th>#</th><th>Name</th><th>Klicks</th></tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="leaderboard">
+        </tbody>
     </table>
 </body>
 </html>
