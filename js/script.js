@@ -1,117 +1,85 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import {
-  getDatabase, ref, set, get, update, onValue
-} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-// Deine Firebase-Konfiguration
 const firebaseConfig = {
-  apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8M2F-ibeY",
-  authDomain: "dont-push-b6170.firebaseapp.com",
-  databaseURL: "https://dont-push-b6170-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "dont-push-b6170",
-  storageBucket: "dont-push-b6170.appspot.com",
-  messagingSenderId: "813001059051",
-  appId: "1:813001059051:web:5558a33d10fe3c0e6b154a",
-  measurementId: "G-7F5MDTT4K6"
+  // ADD YOUR FIREBASE CONFIG HERE
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let currentUser = "";
-let clickCount = 0;
+let totalClicks = 0;
 let freeClicks = 3;
 
-function joinGame() {
-  const input = document.getElementById('username');
-  const name = input.value.trim();
-  if (!name) return alert("Bitte Namen eingeben.");
-  currentUser = name;
+window.joinGame = function () {
+  const username = document.getElementById("username").value.trim();
+  if (!username) return;
+  currentUser = username;
 
-  const userRef = ref(db, 'users/' + name);
-  get(userRef).then(snapshot => {
-    if (!snapshot.exists()) {
-      set(userRef, { clicks: 0 });
+  const userRef = ref(db, 'users/' + username);
+  get(userRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      totalClicks = snapshot.val().clicks || 0;
     } else {
-      clickCount = snapshot.val().clicks || 0;
+      totalClicks = 0;
+      set(userRef, { name: username, clicks: 0 });
     }
+    document.getElementById("clickCount").textContent = "Gesamtklicks: " + totalClicks;
+    document.getElementById("clickButton").disabled = false;
   });
+};
 
-  document.getElementById('epicButton').style.display = "inline-block";
-}
-
-function handleClick() {
+window.handleClick = function () {
+  if (!currentUser) return alert("Bitte zuerst teilnehmen.");
   if (freeClicks <= 0) {
-    alert("Keine Freiklicks mehr! Bitte Klicks kaufen.");
+    document.getElementById("paymentArea").style.display = "block";
     return;
   }
-
+  totalClicks++;
   freeClicks--;
-  clickCount++;
-
   const userRef = ref(db, 'users/' + currentUser);
-  set(userRef, {
-    name: currentUser,
-    clicks: clickCount
-  });
+  set(userRef, { name: currentUser, clicks: totalClicks });
+  document.getElementById("clickCount").textContent = "Gesamtklicks: " + totalClicks;
+  updateLeaderboard();
+  updateGlobalCounter();
+};
 
-  const totalRef = ref(db, 'totalClicks');
-  get(totalRef).then(snapshot => {
-    const total = snapshot.val() || 0;
-    set(totalRef, total + 1);
-  });
-}
+window.buyClicks = function (method) {
+  freeClicks += 5;
+  document.getElementById("paymentArea").style.display = "none";
+  alert("Bezahlung (" + method + ") erfolgreich! Du hast 5 neue Klicks.");
+};
 
 function updateLeaderboard() {
   const usersRef = ref(db, 'users');
   onValue(usersRef, (snapshot) => {
     const data = snapshot.val();
-    const sorted = Object.entries(data || {}).sort((a, b) => b[1].clicks - a[1].clicks).slice(0, 10);
+    if (!data) return;
+    const sorted = Object.values(data).sort((a, b) => b.clicks - a.clicks);
     const leaderboard = document.getElementById("leaderboard");
     leaderboard.innerHTML = "";
-    sorted.forEach(([name, val], idx) => {
-      leaderboard.innerHTML += `<tr><td>${idx + 1}</td><td>${name}</td><td>${val.clicks}</td></tr>`;
+    sorted.forEach((user, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${index + 1}</td><td>${user.name}</td><td>${user.clicks}</td>`;
+      leaderboard.appendChild(row);
     });
   });
 }
 
-function updateTotalClicks() {
-  const totalRef = ref(db, 'totalClicks');
-  onValue(totalRef, (snapshot) => {
-    document.getElementById("totalClicks").innerText = snapshot.val() || 0;
+function updateGlobalCounter() {
+  const counterRef = ref(db, 'globalClicks');
+  get(counterRef).then(snapshot => {
+    let count = snapshot.exists() ? snapshot.val() : 0;
+    count++;
+    set(counterRef, count);
+    document.getElementById("globalCount").textContent = count;
   });
 }
 
-function buyClicks() {
-  alert("Zahlungssystem in Vorbereitung – PayPal Integration folgt.");
-  freeClicks += 5;
-}
-
-function switchLanguage(lang) {
-  const texts = {
-    de: {
-      title: "Drück ihn nicht!",
-      subtitle: "Der weltweit meistgeklickte verbotene Knopf",
-      description: "Willkommen! Du hast 3 Freiklicks pro Tag...",
-      joinBtn: "Teilnehmen",
-      buyBtn: "Klicks kaufen"
-    },
-    en: {
-      title: "Don't Press It!",
-      subtitle: "The world's most clicked forbidden button",
-      description: "Welcome! You get 3 free clicks per day...",
-      joinBtn: "Join",
-      buyBtn: "Buy Clicks"
-    }
-  };
-  const t = texts[lang];
-  document.getElementById("title").innerText = t.title;
-  document.getElementById("subtitle").innerText = t.subtitle;
-  document.getElementById("description").innerText = t.description;
-  document.getElementById("joinBtn").innerText = t.joinBtn;
-  document.getElementById("buyClicks").innerText = t.buyBtn;
-}
+onValue(ref(db, 'globalClicks'), (snapshot) => {
+  if (snapshot.exists()) {
+    document.getElementById("globalCount").textContent = snapshot.val();
+  }
+});
 
 updateLeaderboard();
-updateTotalClicks();
