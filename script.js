@@ -63,18 +63,22 @@ function loadLeaderboard() {
   const leaderboard = document.getElementById("leaderboard");
   leaderboard.innerHTML = "";
 
-  onValue(ref(db, 'users'), (snapshot) => {
-    const data = snapshot.val();
-    const sortedUsers = Object.entries(data)
-      .sort((a, b) => b[1].clicks - a[1].clicks)
-      .slice(0, 10); // Top 10
+ onValue(ref(db, "users"), (snapshot) => {
+  const data = snapshot.val();
+  const sorted = Object.values(data).sort((a, b) => b.clicks - a.clicks);
 
-    sortedUsers.forEach(([name, info], index) => {
-      const row = `<tr><td>${index + 1}</td><td>${name}</td><td>${info.clicks}</td></tr>`;
-      leaderboard.innerHTML += row;
-    });
+  const leaderboard = document.getElementById("leaderboard");
+  leaderboard.innerHTML = ""; // vorher leeren!
+
+  sorted.forEach((entry, index) => {
+    const row = `<tr>
+                   <td>${index + 1}</td>
+                   <td>${entry.name}</td>
+                   <td>${entry.clicks}</td>
+                 </tr>`;
+    leaderboard.innerHTML += row;
   });
-}
+});
 
 window.onload = () => {
   loadLeaderboard();
