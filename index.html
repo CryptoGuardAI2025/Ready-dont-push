@@ -44,30 +44,5 @@
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
   <script src="script.js"></script>
-  <script>
-    function switchLanguage(lang) {
-      if (lang === 'de') {
-        document.getElementById('title').textContent = 'Drück ihn nicht!';
-        document.getElementById('subtitle').textContent = 'Der weltweit meistgeklickte verbotene Knopf';
-        document.getElementById('description').textContent = 'Willkommen! Du hast 3 Freiklicks pro Tag. Danach kannst du freiwillig weitere Klicks kaufen: 1 Klick = 0,30 €, 5 Klicks = 1,00 €.';
-        document.getElementById('joinBtn').textContent = 'Teilnehmen';
-        document.getElementById('priceInfo').textContent = '1 Klick = 0,30 € | 5 Klicks = 1,00 €';
-        document.getElementById('leaderboardTitle').textContent = 'Rangliste';
-        document.getElementById('nameHeader').textContent = 'Name';
-        document.getElementById('clicksHeader').textContent = 'Klicks';
-        document.getElementById('username').placeholder = 'Dein einzigartiger Name';
-      } else {
-        document.getElementById('title').textContent = "Don't Push!";
-        document.getElementById('subtitle').textContent = "The world's most clicked forbidden button";
-        document.getElementById('description').textContent = "Welcome! You get 3 free clicks per day. After that, you can buy more: 1 click = €0.30, 5 clicks = €1.00.";
-        document.getElementById('joinBtn').textContent = 'Join';
-        document.getElementById('priceInfo').textContent = '1 click = €0.30 | 5 clicks = €1.00';
-        document.getElementById('leaderboardTitle').textContent = 'Leaderboard';
-        document.getElementById('nameHeader').textContent = 'Name';
-        document.getElementById('clicksHeader').textContent = 'Clicks';
-        document.getElementById('username').placeholder = 'Your unique name';
-      }
-    }
-  </script>
 </body>
 </html>
