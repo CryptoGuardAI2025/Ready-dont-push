@@ -23,6 +23,11 @@ function handleClick() {
     freeClicks--;
     totalClicks++;
     document.getElementById("clickCount").innerText = totalClicks;
+
+    // Klicks in der Datenbank speichern
+    set(ref(db, 'users/' + user), {
+      clicks: totalClicks
+    });
   } else {
     alert("Keine Freiklicks mehr. Bitte Klicks kaufen.");
   }
