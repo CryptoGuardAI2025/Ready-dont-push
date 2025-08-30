@@ -18,7 +18,16 @@ function registerUser() {
   });
 }
 
-import { ref, set } from "firebase/database"; // Stelle sicher, dass das importiert ist
+import { getDatabase, ref, set, onValue } from "firebase/database";
+
+function saveUserClick(username, clickCount) {
+  const db = getDatabase();
+  const userRef = ref(db, 'users/' + username); // ← identifiziert Nutzer eindeutig
+  set(userRef, {
+    name: username,
+    clicks: clickCount
+  });
+}
 
 function handleClick() {
   if (freeClicks > 0) {
