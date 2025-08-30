@@ -72,13 +72,14 @@
     <a href="agb.html">AGB</a>
   </div>
 
-  <script src="script.js"></script>
-<script type="module">
-  // Firebase importieren
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  <!-- Script für deine Logik -->
+<script src="script.js"></script>
 
-  // Deine Konfiguration
+<!-- Firebase Setup (modular via Browser Modules) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
   const firebaseConfig = {
     apiKey: "AIzaSyCYmoUq4KyZjb5VAU4IYNOLnd8M2F-ibeY",
     authDomain: "dont-push-b6170.firebaseapp.com",
@@ -90,16 +91,13 @@
     measurementId: "G-8EPCZRVPH1"
   };
 
-  // Firebase starten
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // Zugriff auf DB exportieren
   window.db = db;
   window.ref = ref;
   window.set = set;
   window.onValue = onValue;
-  window.get = get;
 </script>
 </body>
 </html>
