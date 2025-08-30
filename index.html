@@ -1,69 +1,85 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Don't Push It!</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        .lang-buttons button, #joinBtn, #buyBtn {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 10px;
-        }
-        #bigButton {
-            margin: 20px auto;
-            padding: 30px 60px;
-            font-size: 2rem;
-            background: red;
-            border: none;
-            color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            display: none;
-        }
-        table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 80%;
-        }
-        th, td {
-            border: 1px solid white;
-            padding: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drück ihn nicht!</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    .language-buttons button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+    }
+    #epicButton {
+      margin-top: 20px;
+      width: 250px;
+      height: 120px;
+      font-size: 1.5em;
+      font-weight: bold;
+      border-radius: 60px;
+      background-color: red;
+      color: white;
+      border: none;
+      display: none;
+    }
+    #digitalCounter {
+      font-size: 2em;
+      margin: 20px 0;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      width: 60%;
+    }
+    table, th, td {
+      border: 1px solid white;
+    }
+    th, td {
+      padding: 10px;
+    }
+    #buyClicks {
+      margin: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+    }
+  </style>
 </head>
 <body>
-    <div class="lang-buttons">
-        <button onclick="switchLanguage('de')">Deutsch</button>
-        <button onclick="switchLanguage('en')">English</button>
-    </div>
-    <h1 id="title">Drück ihn nicht!</h1>
-    <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
-    <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag...</p>
-    <input type="text" id="username" placeholder="Dein Name">
-    <button id="joinBtn" onclick="joinGame()">Teilnehmen</button>
-    <button id="bigButton" onclick="handleClick()">Don't Push</button>
-    <p id="priceInfo">1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
-    <button id="buyBtn" onclick="buyClicks()">Klicks kaufen</button>
-    <p id="totalClicksInfo">Gesamtklicks weltweit: <span id="totalClicks">0</span></p>
-    <h2 id="leaderboardTitle">Rangliste</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th id="nameHeader">Name</th>
-                <th id="clicksHeader">Klicks</th>
-            </tr>
-        </thead>
-        <tbody id="leaderboard"></tbody>
-    </table>
-    <script src="script.js"></script>
+  <div class="language-buttons">
+    <button onclick="switchLanguage('de')">Deutsch</button>
+    <button onclick="switchLanguage('en')">English</button>
+  </div>
+  <h1 id="title">Drück ihn nicht!</h1>
+  <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
+  <p id="description">Willkommen! Du hast 3 Freiklicks pro Tag...</p>
+
+  <input type="text" id="username" placeholder="Dein Name"/>
+  <button onclick="joinGame()" id="joinBtn">Teilnehmen</button>
+
+  <br/><br/>
+  <button id="epicButton" onclick="handleClick()">Don't Push</button>
+
+  <p>1 Klick = 0,30 € | 5 Klicks = 1,00 €</p>
+  <button id="buyClicks" onclick="buyClicks()">Klicks kaufen</button>
+
+  <div id="digitalCounter">Gesamtklicks weltweit: <span id="totalClicks">0</span></div>
+
+  <h2>Rangliste</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Name</th><th>Klicks</th></tr>
+    </thead>
+    <tbody id="leaderboard"></tbody>
+  </table>
+
+  <script src="script.js" type="module"></script>
 </body>
 </html>
