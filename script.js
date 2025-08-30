@@ -20,7 +20,7 @@ function registerUser() {
 
 import { getDatabase, ref, set, onValue } from "firebase/database";
 
-function saveUserClick(username, clickCount) {
+function saveUserClick(user, totalClicks); // ⬅️ Wichtig!
   const db = getDatabase();
   const userRef = ref(db, 'users/' + username); // ← identifiziert Nutzer eindeutig
   set(userRef, {
