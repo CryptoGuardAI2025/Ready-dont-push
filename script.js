@@ -18,21 +18,24 @@ function registerUser() {
   });
 }
 
+import { ref, set } from "firebase/database"; // Stelle sicher, dass das importiert ist
+
 function handleClick() {
   if (freeClicks > 0) {
     freeClicks--;
     totalClicks++;
     document.getElementById("clickCount").innerText = totalClicks;
 
-    // Klicks in der Datenbank speichern
-    set(ref(db, 'users/' + user), {
+    // ✅ Klicks für den aktuellen Benutzer speichern
+    set(ref(db, "users/" + user), {
+      name: user,
       clicks: totalClicks
     });
+
   } else {
-    alert("Keine Freiklicks mehr. Bitte Klicks kaufen.");
+    alert("Keine Freiklicks mehr. Bitte Klicks kaufen!");
   }
 }
-
 function switchLanguage(lang) {
   if (lang === 'de') {
     document.getElementById('title').textContent = "Drück ihn nicht!";
