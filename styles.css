@@ -1,31 +1,32 @@
+
 body {
-  background: black;
+  background: #111;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   text-align: center;
+  padding: 20px;
 }
-.lang-buttons button, .user-area button, #clickButton, #paymentArea button {
+button {
+  margin: 5px;
   padding: 10px 20px;
-  margin: 10px;
   font-size: 16px;
-  border-radius: 20px;
-}
-#clickButton {
-  background: red;
-  color: white;
-  font-size: 24px;
   border: none;
-  width: 200px;
-  height: 100px;
-  border-radius: 50px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #eee;
+  color: #111;
 }
-table {
-  margin: 0 auto;
-  border-collapse: collapse;
-  background: white;
-  color: black;
+#push-button {
+  font-size: 24px;
+  background-color: red;
+  color: white;
+  animation: glow 1s infinite alternate;
 }
-th, td {
-  padding: 10px 20px;
-  border: 1px solid black;
+@keyframes glow {
+  from { box-shadow: 0 0 5px red; }
+  to { box-shadow: 0 0 20px red; }
 }
+.container { max-width: 600px; margin: auto; }
+.hidden { display: none; }
+table { width: 100%; margin-top: 20px; }
+th, td { padding: 10px; border-bottom: 1px solid #444; }

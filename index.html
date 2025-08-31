@@ -2,37 +2,43 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Drück ihn nicht!</title>
-    <script type="module" src="script.js" defer></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Don't Push!</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="language-switch">
-        <button onclick="switchLanguage('de')">Deutsch</button>
-        <button onclick="switchLanguage('en')">English</button>
+  <div class="container">
+    <div class="lang-switch">
+      <button onclick="setLanguage('de')">Deutsch</button>
+      <button onclick="setLanguage('en')">English</button>
     </div>
-    <h1 id="title">Drück ihn nicht!</h1>
+    <h1 id="main-title">Drück ihn nicht!</h1>
     <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
-    <p id="welcome">Willkommen! Du hast 3 Freiklicks pro Tag…</p>
-
-    <input type="text" id="username" placeholder="Dein Name">
-    <button onclick="registerUser()">Teilnehmen</button>
-
-    <button id="clickButton" onclick="handleClick()" disabled>Don't Push</button>
-
-    <p id="price-info">5 Klicks = 1,00 €</p>
-    <button onclick="buyClicks()">Klicks kaufen</button>
-
-    <p>Gesamtklicks weltweit: <span id="globalClicks">0</span></p>
-
+    <p id="welcome-text">Willkommen! Du hast 3 Freiklicks pro Tag…</p>
+    <div class="input-area">
+      <input type="text" id="username" placeholder="Dein Name" />
+      <button onclick="joinGame()">Teilnehmen</button>
+    </div>
+    <div class="button-area hidden" id="game-area">
+      <button id="push-button" onclick="handleClick()">Don't Push</button>
+      <p id="click-price">5 Klicks = 1,00 €</p>
+      <button onclick="buyClicks()">Klicks kaufen</button>
+    </div>
+    <div class="counter">
+      <h2>Gesamtklicks weltweit:</h2>
+      <div id="global-counter">0</div>
+    </div>
     <h2>Rangliste</h2>
     <table>
-        <thead>
-            <tr><th>#</th><th>Name</th><th>Klicks</th></tr>
-        </thead>
-        <tbody id="leaderboard">
-        </tbody>
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Klicks</th></tr>
+      </thead>
+      <tbody id="leaderboard"></tbody>
     </table>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
