@@ -1,29 +1,114 @@
 
+/* Neon Cyber Dark UI */
 body {
-  background: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
+  background-color: #0f0f0f;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 90%;
+  max-width: 700px;
   text-align: center;
-  padding: 20px;
+  padding: 2rem;
+  background: #161616;
+  border-radius: 12px;
+  box-shadow: 0 0 30px #00ffcc40;
 }
+
+h1 {
+  font-size: 2.5rem;
+  color: #00ffc3;
+  text-shadow: 0 0 8px #00ffc3;
+}
+
+#subtitle {
+  margin-top: -1rem;
+  color: #bbbbbb;
+}
+
+input[type="text"] {
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #00ffc3;
+  background: #1c1c1c;
+  color: #00ffc3;
+  margin-right: 0.5rem;
+}
+
 button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 1em;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: #00ffc3;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px #00ffc3;
+  transition: all 0.3s ease;
 }
-#pushBtn {
-  background: red;
-  color: white;
-  font-size: 1.5em;
+
+button:hover {
+  background: #00caa5;
+  box-shadow: 0 0 20px #00ffc3;
+}
+
+#clickBtn {
+  margin-top: 2rem;
+  padding: 1.5rem 3rem;
+  font-size: 1.5rem;
   border-radius: 50px;
-  padding: 20px;
+  background: #ff0033;
+  color: #000;
+  text-transform: uppercase;
+  box-shadow: 0 0 25px #ff0033;
 }
+
+#clickBtn:hover {
+  background: #cc0029;
+  box-shadow: 0 0 40px #ff0033;
+}
+
+.digital-counter {
+  font-family: 'Courier New', monospace;
+  font-size: 2.5rem;
+  color: #ff0033;
+  background: #1c1c1c;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: inset 0 0 15px #ff0033;
+  margin: 1rem auto;
+  display: inline-block;
+  min-width: 200px;
+}
+
 table {
-  margin: auto;
-  margin-top: 10px;
+  width: 100%;
+  margin-top: 1rem;
   border-collapse: collapse;
 }
-table, th, td {
-  border: 1px solid white;
-  padding: 5px 10px;
+
+th, td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #333;
+  color: #00ffc3;
+}
+
+.language-switch button {
+  background: transparent;
+  border: 1px solid #00ffc3;
+  color: #00ffc3;
+  margin: 0.3rem;
+  box-shadow: none;
+}
+
+.language-switch button:hover {
+  background: #00ffc3;
+  color: #000;
 }
