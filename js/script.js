@@ -1,38 +1,53 @@
 
-let lang = 'de';
-let clicksLeft = 3;
+let language = 'de';
+let userClicks = 0;
+let totalClicks = 0;
+let username = '';
+let freeClicks = 3;
 
-function setLang(selectedLang) {
-  lang = selectedLang;
-  document.getElementById("headline").textContent = lang === 'de' ? "Drück ihn nicht!" : "Don't press it!";
-  document.getElementById("subline").textContent = lang === 'de' ? "Der weltweit meistgeklickte verbotene Knopf" : "The most clicked forbidden button worldwide";
-  document.getElementById("welcome").innerHTML = lang === 'de' ? "Willkommen! Du hast <span id='freiklicks'>" + clicksLeft + "</span> Freiklicks pro Tag…" : "Welcome! You have <span id='freiklicks'>" + clicksLeft + "</span> free clicks per day…";
-  document.getElementById("joinBtn").textContent = lang === 'de' ? "Teilnehmen" : "Join";
-  document.getElementById("buyBtn").textContent = lang === 'de' ? "Klicks kaufen" : "Buy clicks";
-  document.getElementById("priceInfo").textContent = "5 Klicks = 1,00 €";
-  document.getElementById("totalClicksTitle").textContent = lang === 'de' ? "Gesamtklicks weltweit:" : "Total Clicks Worldwide:";
-  document.getElementById("rankingTitle").textContent = lang === 'de' ? "Rangliste" : "Leaderboard";
+function setLanguage(lang) {
+  language = lang;
+  document.getElementById('title').innerText = lang === 'de' ? 'Drück ihn nicht!' : "Don't Push!";
+  document.getElementById('subtitle').innerText = lang === 'de' 
+    ? 'Der weltweit meistgeklickte verbotene Knopf'
+    : 'The world’s most pushed forbidden button';
+  document.getElementById('welcome').innerText = lang === 'de'
+    ? 'Willkommen! Du hast 3 Freiklicks pro Tag'
+    : 'Welcome! You have 3 free clicks per day';
+  document.getElementById('joinBtn').innerText = lang === 'de' ? 'Teilnehmen' : 'Join';
+  document.getElementById('clickBtn').innerText = lang === 'de' ? 'Nicht Drücken' : 'Don't Push';
 }
 
-document.getElementById("joinBtn").addEventListener("click", () => {
-  const name = document.getElementById("username").value;
-  if (!name) return alert("Name eingeben!");
-  document.getElementById("pushBtn").style.display = "inline-block";
-  document.getElementById("buyBtn").style.display = "inline-block";
-});
+function registerUser() {
+  const nameField = document.getElementById('username');
+  const name = nameField.value.trim();
+  if (!name) return alert(language === 'de' ? 'Bitte Namen eingeben.' : 'Please enter a name.');
+  username = name;
+  userClicks = 0;
+  freeClicks = 3;
+  document.getElementById('clickBtn').disabled = false;
+  alert(language === 'de' 
+    ? `Willkommen, ${username}! Du hast ${freeClicks} freie Klicks.` 
+    : `Welcome, ${username}! You have ${freeClicks} free clicks.`);
+}
 
-document.getElementById("pushBtn").addEventListener("click", () => {
-  if (clicksLeft <= 0) {
-    alert("Keine Klicks mehr! Bitte kaufen.");
-    return;
+function handleClick() {
+  if (!username) return alert(language === 'de' ? 'Bitte zuerst teilnehmen.' : 'Please join first.');
+  if (freeClicks > 0) {
+    userClicks++;
+    totalClicks++;
+    freeClicks--;
+    updateGlobalClicks();
+  } else {
+    alert(language === 'de' 
+      ? 'Keine Freiklicks mehr. Bitte kaufe Klicks.'
+      : 'No free clicks left. Please purchase more.');
   }
-  clicksLeft--;
-  document.getElementById("freiklicks").textContent = clicksLeft;
-  // Hier Firebase update code einfügen
-});
+}
 
-document.getElementById("buyBtn").addEventListener("click", () => {
-  clicksLeft += 5;
-  document.getElementById("freiklicks").textContent = clicksLeft;
-  alert("Demo: 5 Klicks hinzugefügt (kein echtes Geld abgebucht)");
-});
+function updateGlobalClicks() {
+  const clickDisplay = document.getElementById('globalClicks');
+  clickDisplay.innerText = totalClicks.toString().padStart(6, '0');
+}
+
+setLanguage('de'); // Default on load
