@@ -1,0 +1,32 @@
+
+body {
+  background: #111;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #eee;
+  color: #111;
+}
+#push-button {
+  font-size: 24px;
+  background-color: red;
+  color: white;
+  animation: glow 1s infinite alternate;
+}
+@keyframes glow {
+  from { box-shadow: 0 0 5px red; }
+  to { box-shadow: 0 0 20px red; }
+}
+.container { max-width: 600px; margin: auto; }
+.hidden { display: none; }
+table { width: 100%; margin-top: 20px; }
+th, td { padding: 10px; border-bottom: 1px solid #444; }
