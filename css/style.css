@@ -1,23 +1,40 @@
 
 body {
-    background-color: #000;
-    font-family: 'Orbitron', sans-serif;
-    color: #fff;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+.container {
     text-align: center;
-    padding: 20px;
+    width: 100%;
+    max-width: 500px;
 }
 button {
     background: #0ff;
     color: #000;
-    border: 2px solid #0ff;
-    padding: 10px;
+    border: none;
+    padding: 10px 20px;
     margin: 5px;
-    font-size: 1em;
     border-radius: 8px;
-    cursor: pointer;
+    font-size: 1rem;
+}
+button:hover {
+    background: #f0f;
+}
+#clickButton {
+    background: red;
+    color: white;
+    font-size: 1.5rem;
 }
 .digital {
-    font-size: 2em;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2rem;
     color: red;
-    font-family: monospace;
+    animation: blink 1s infinite;
+}
+@keyframes blink {
+    50% { opacity: 0.5; }
 }
