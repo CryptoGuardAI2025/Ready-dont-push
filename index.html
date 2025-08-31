@@ -2,33 +2,46 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drück ihn nicht!</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=EUR"></script>
 </head>
 <body>
-    <div class="lang-buttons">
-        <button onclick="setLanguage('de')">Deutsch</button>
-        <button onclick="setLanguage('en')">English</button>
+    <div class="container">
+        <div class="lang-switch">
+            <button onclick="setLanguage('de')">Deutsch</button>
+            <button onclick="setLanguage('en')">English</button>
+        </div>
+        <h1 id="title">Drück ihn nicht!</h1>
+        <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
+        <p id="welcome">Willkommen! Du hast <span id="freeClicks">3</span> Freiklicks pro Tag</p>
+
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Dein Name" />
+            <button onclick="registerUser()">Teilnehmen</button>
+        </div>
+
+        <button id="clickButton" onclick="handleClick()">Don't Push</button>
+        <div id="paypal-button-container"></div>
+
+        <p>5 Klicks = <strong>1,00 €</strong></p>
+
+        <h2>Gesamtklicks weltweit:</h2>
+        <div id="globalClicks" class="digital">000000</div>
+
+        <h3>Rangliste</h3>
+        <table>
+            <thead>
+                <tr><th>#</th><th>Name</th><th>Klicks</th></tr>
+            </thead>
+            <tbody id="leaderboard"></tbody>
+        </table>
     </div>
-    <h1 id="title">Drück ihn nicht!</h1>
-    <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
-    <p id="welcome">Willkommen! Du hast <span id="freeClicks">3</span> Freiklicks pro Tag</p>
-    <input type="text" id="username" placeholder="Dein Name">
-    <button onclick="registerUser()">Teilnehmen</button>
-    <button id="clickButton" onclick="clickButton()">Don't Push</button>
-    <div id="paypal-button-container" style="display:none;"></div>
-    <p>5 Klicks = <strong>1,00 €</strong></p>
-    <h2>Gesamtklicks weltweit:</h2>
-    <div id="globalCounter" class="digital">000000</div>
-    <h3>Rangliste</h3>
-    <table>
-        <thead><tr><th>#</th><th>Name</th><th>Klicks</th></tr></thead>
-        <tbody id="leaderboard"></tbody>
-    </table>
-    <script src="app.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
