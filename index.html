@@ -1,25 +1,29 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Don't Push</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script type="module" src="js/script.js" defer></script>
-  <script type="module" src="js/firebase-config.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drück ihn nicht!</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <script defer src="firebase-config.js"></script>
 </head>
 <body>
   <div class="lang-switch">
-    <button onclick="setLanguage('de')">Deutsch</button>
-    <button onclick="setLanguage('en')">English</button>
+    <button onclick="setLang('de')">Deutsch</button>
+    <button onclick="setLang('en')">English</button>
   </div>
-  <h1 id="title">Drück ihn nicht!</h1>
-  <p id="subtitle">Der weltweit meistgeklickte verbotene Knopf</p>
-  <p id="freeklicks-msg">Willkommen! Du hast 3 Freiklicks pro Tag…</p>
 
-  <input type="text" id="username" placeholder="Dein Name">
+  <h1 id="headline">Drück ihn nicht!</h1>
+  <p id="subline">Der weltweit meistgeklickte verbotene Knopf</p>
+  <p id="welcome">Willkommen! Du hast <span id="freiklicks">3</span> Freiklicks pro Tag…</p>
+
+  <input type="text" id="username" placeholder="Dein Name"/>
   <button id="joinBtn">Teilnehmen</button>
-  <button id="clickBtn" style="display:none;">Don't Push</button>
+  <button id="pushBtn" style="display:none;">Don't Push</button>
 
   <p id="priceInfo">5 Klicks = 1,00 €</p>
   <button id="buyBtn" style="display:none;">Klicks kaufen</button>
@@ -27,10 +31,12 @@
   <h2 id="totalClicksTitle">Gesamtklicks weltweit:</h2>
   <div id="totalClicks">0</div>
 
-  <h2>Rangliste</h2>
-  <table id="leaderboard">
-    <thead><tr><th>#</th><th>Name</th><th>Klicks</th></tr></thead>
-    <tbody></tbody>
+  <h2 id="rankingTitle">Rangliste</h2>
+  <table id="ranking">
+    <thead>
+      <tr><th>#</th><th>Name</th><th>Klicks</th></tr>
+    </thead>
+    <tbody id="rankingBody"></tbody>
   </table>
 </body>
 </html>
